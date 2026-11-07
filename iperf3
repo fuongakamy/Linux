@@ -1,0 +1,75 @@
+Cài đặt 
+  sudo apt update
+  sudo apt install -y iperf3
+  iperf3 --version
+
+Server:
+  iperf3 -s    => 	Khởi chạy server, port 5201
+  iperf3 -s -p 5001	 => Lắng nghe port 5001
+  iperf3 -s -B 10.10.10.1	  => Bind vào IP cụ thể
+  iperf3 -s -D	  =>  Chạy dưới dạng daemon
+  iperf3 -s -1	=> Chỉ phục vụ một phiên test rồi thoát
+  iperf3 -s -4	=> Chỉ sử dụng IPv4
+  iperf3 -s -6	=> Chỉ sử dụng IPv6
+  iperf3 -s --logfile /tmp/iperf3.log   => Ghi log ra file
+
+
+TCP
+  iperf3 -c 10.10.10.1	=> Test TCP mặc định 10 giây
+  iperf3 -c 10.10.10.1 -t 60	=> Test 60 giây
+  iperf3 -c 10.10.10.1 -P 4	 => Test 4 luồng TCP
+  iperf3 -c 10.10.10.1 -P 8   => 	Test 8 luồng TCP
+  iperf3 -c 10.10.10.1 -R	   => Đảo chiều truyền dữ liệu
+  iperf3 -c 10.10.10.1 --bidir	  => Test hai chiều đồng thời
+  iperf3 -c 10.10.10.1 -b 100M	  => Giới hạn mục tiêu gửi 100 Mbps
+  iperf3 -c 10.10.10.1 -n 1G	  => Gửi tổng cộng khoảng 1 GB dữ liệu
+  iperf3 -c 10.10.10.1 -O 5	  => Bỏ qua 5 giây đầu khi thống kê
+  iperf3 -c 10.10.10.1 -i 1	  => Hiển thị kết quả mỗi giây
+
+  iperf3 -c 10.10.10.1 -t 60 -P 4 -O 5
+
+UDP
+  iperf3 -c 10.10.10.1 -u	  => UDP mặc định 1 Mbps
+  iperf3 -c 10.10.10.1 -u -b 10M	  =>  Test UDP 10 Mbps
+  iperf3 -c 10.10.10.1 -u -b 500M	  => Test UDP 500 Mbps
+  iperf3 -c 10.10.10.1 -u -b 1G	  => Test UDP 1 Gbps
+  iperf3 -c 10.10.10.1 -u -b 100M -t 60	  => UDP 100 Mbps trong 60 giây
+  iperf3 -c 10.10.10.1 -u -b 100M -R	  => UDP chiều Server → Client
+  iperf3 -c 10.10.10.1 -u -b 100M -l 1200	  => UDP payload 1200 bytes
+
+  iperf3 -c 10.10.10.1 -u -b 500M -t 60 -i 1
+
+
+# Chỉ định Source IP
+  iperf3 -c 10.10.10.1 -B 192.168.1.10
+
+# Bind interface ens192 (Linux)
+  sudo iperf3 -c 10.10.10.1 --bind-dev ens192
+
+# Chỉ dùng IPv4
+  iperf3 -4 -c 10.10.10.1
+
+# Chỉ dùng IPv6
+  iperf3 -6 -c 2001:db8::1
+
+# Chỉ định port Server
+  iperf3 -c 10.10.10.1 -p 5001
+
+
+1. TCP Upload
+  iperf3 -c 10.10.10.1 -P 4 -t 60 -O 5   => Đánh giá throughput từ Client đến Server.
+
+2. TCP Download
+  iperf3 -c 10.10.10.1 -R -P 4 -t 60 -O 5  => Đánh giá chiều ngược lại.
+
+3. Full Duplex
+  iperf3 -c 10.10.10.1 --bidir -P 4 -t 60  => Đánh giá hai chiều hoạt động đồng thời.
+
+4. UDP 500 Mbps
+iperf3 -c 10.10.10.1 -u -b 500M -t 60  => Đánh giá loss và jitter ở tải 500 Mbps.
+
+5. UDP 900 Mbps
+iperf3 -c 10.10.10.1 -u -b 900M -t 60  => Đánh giá loss/jitter khi gần tốc độ hợp đồng; chỉ chạy khi được phép.
+
+6. TCP Single Stream
+  iperf3 -c 10.10.10.1 -P 1 -t 60  => So sánh hiệu năng 1 luồng với 4 luồng.
